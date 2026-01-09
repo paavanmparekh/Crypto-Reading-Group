@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptography Reading Group - Talks</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>Cryptography Reading Group</h1>
+                <p class="subtitle">Stony Brook University</p>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="talks.html" class="active">Talks</a></li>
+                    <li><a href="people.html">People</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="page-header">
+            <h2>Previous Talks</h2>
+            <p>Explore our collection of past presentations and resources</p>
+        </section>
+
+        <section id="talks-list" class="talks-list">
+            <div class="no-talks" id="no-talks-message">
+                <p>No talks have been added yet. Be the first to share your presentation!</p>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h3>Add a New Talk</h3>
+            <p class="form-description">Recently presented? Share your talk details with the group.</p>
+            
+            <form id="talk-form" class="talk-form">
+                <div class="form-group">
+                    <label for="presenter">Presenter Name *</label>
+                    <input type="text" id="presenter" name="presenter" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Presentation Date *</label>
+                    <input type="date" id="date" name="date" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="title">Talk Title *</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description *</label>
+                    <textarea id="description" name="description" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="paper">Paper/Article Title</label>
+                    <input type="text" id="paper" name="paper">
+                </div>
+
+                <div class="form-group">
+                    <label for="authors">Paper Authors</label>
+                    <input type="text" id="authors" name="authors">
+                </div>
+
+                <div class="resources-section">
+                    <h4>Resources (Optional)</h4>
+                    
+                    <div class="form-group">
+                        <label for="pdf-link">PDF Link</label>
+                        <input type="url" id="pdf-link" name="pdfLink" placeholder="https://example.com/paper.pdf">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="slides-link">Slides Link (PPT/PDF)</label>
+                        <input type="url" id="slides-link" name="slidesLink" placeholder="https://example.com/slides.pdf">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recording-link">Recording Link</label>
+                        <input type="url" id="recording-link" name="recordingLink" placeholder="https://example.com/recording">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="additional-links">Additional Resources</label>
+                        <textarea id="additional-links" name="additionalLinks" rows="2" placeholder="Any other relevant links (one per line)"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Add Talk</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Cryptography Reading Group, Stony Brook University. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
