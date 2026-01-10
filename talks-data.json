@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1704864000000,
+    "presenter": "Sarah Johnson",
+    "date": "2024-01-10",
+    "title": "Zero-Knowledge Proofs in Practice",
+    "description": "An introduction to zero-knowledge proof systems and their real-world applications in privacy-preserving cryptocurrencies.",
+    "paper": "Zerocash: Decentralized Anonymous Payments from Bitcoin",
+    "authors": "Eli Ben-Sasson, Alessandro Chiesa, Christina Garman, Matthew Green, Ian Miers, Eran Tromer, Madars Virza",
+    "pdfLink": "https://eprint.iacr.org/2014/349.pdf",
+    "slidesLink": "https://example.com/slides/zkp-practice.pdf",
+    "recordingLink": "https://example.com/recordings/zkp-practice",
+    "additionalLinks": "https://z.cash/\nhttps://github.com/zcash/zcash"
+  },
+  {
+    "id": 1704950400000,
+    "presenter": "Dr. Michael Chen",
+    "date": "2024-01-17",
+    "title": "Post-Quantum Cryptography: Preparing for the Quantum Era",
+    "description": "Exploring lattice-based cryptographic schemes and their resistance to quantum computer attacks. Discussed the NIST PQC standardization process and candidate algorithms.",
+    "paper": "CRYSTALS-Kyber: A CCA-Secure Module-Lattice-Based KEM",
+    "authors": "Roberto Avanzi, Joppe Bos, Léo Ducas, Eike Kiltz, Tancrède Lepoint, Vadim Lyubashevsky, John M. Schanck, Peter Schwabe, Damien Stehlé",
+    "pdfLink": "https://pq-crystals.org/kyber/data/kyber-specification-round3-20210804.pdf",
+    "slidesLink": "https://example.com/slides/pqc-introduction.pdf",
+    "recordingLink": "",
+    "additionalLinks": "https://csrc.nist.gov/projects/post-quantum-cryptography\nhttps://pq-crystals.org/kyber/"
+  }
+]
