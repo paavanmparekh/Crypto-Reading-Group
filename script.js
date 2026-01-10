@@ -5,20 +5,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     loadTalks();
 
-    function loadTalksFromJson() {
-        return fetch('talks-data.json')
+    // API base URL - check if we're running on the server or just static files
+    const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://localhost:3000/api' 
+        : '/api';
+
+    function loadTalksFromApi() {
+        return fetch(`${API_BASE}/talks`)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to load talks data');
+                    throw new Error('Failed to fetch talks from server');
                 }
                 return response.json();
             })
             .then(talks => {
+                // Cache in localStorage for offline access
                 localStorage.setItem('cryptoTalks', JSON.stringify(talks));
                 return talks;
             })
             .catch(error => {
-                console.warn('Could not load talks from JSON, using localStorage:', error);
+                console.warn('Could not load talks from API, using localStorage cache:', error);
                 return getTalksFromStorage();
             });
     }
@@ -27,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         
         const formData = {
-            id: Date.now(),
             presenter: document.getElementById('presenter').value,
             date: document.getElementById('date').value,
             title: document.getElementById('title').value,
@@ -40,19 +45,56 @@ document.addEventListener('DOMContentLoaded', function() {
             additionalLinks: document.getElementById('additional-links').value
         };
 
-        saveTalk(formData);
-        talkForm.reset();
-        
-        showSuccessMessage();
-        loadTalks();
-        
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        // Show loading state
+        const submitBtn = talkForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Adding...';
+        submitBtn.disabled = true;
+
+        saveTalkToApi(formData)
+            .then(() => {
+                talkForm.reset();
+                showSuccessMessage();
+                loadTalks();
+                
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            })
+            .catch(error => {
+                console.error('Error adding talk:', error);
+                showDataManagementMessage('Failed to add talk. Please try again.', 'error');
+            })
+            .finally(() => {
+                // Reset button state
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
     });
 
+    function saveTalkToApi(talkData) {
+        return fetch(`${API_BASE}/talks`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(talkData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Talk added successfully:', data);
+            return data;
+        });
+    }
+
     function saveTalk(talkData) {
+        // Fallback to localStorage if API is not available
         let talks = getTalksFromStorage();
         talks.unshift(talkData);
         localStorage.setItem('cryptoTalks', JSON.stringify(talks));
@@ -64,8 +106,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadTalks() {
-        // Try to load from JSON first, fallback to localStorage
-        loadTalksFromJson().then(talks => {
+        // Try to load from API first, fallback to localStorage
+        loadTalksFromApi().then(talks => {
             if (talks.length === 0) {
                 noTalksMessage.style.display = 'block';
                 const existingTalks = document.querySelectorAll('.talk-item');
@@ -189,21 +231,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function exportTalksData() {
-        const talks = getTalksFromStorage();
-        const dataStr = JSON.stringify(talks, null, 2);
-        const dataBlob = new Blob([dataStr], { type: 'application/json' });
-        const url = URL.createObjectURL(dataBlob);
-        
-        const link = document.createElement('a');
-        link.href = url;
-        const date = new Date().toISOString().split('T')[0];
-        link.download = `crypto-talks-backup-${date}.json`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        
-        showDataManagementMessage('Talks data exported successfully!', 'success');
+        loadTalksFromApi()
+            .then(talks => {
+                const dataStr = JSON.stringify(talks, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                const date = new Date().toISOString().split('T')[0];
+                link.download = `crypto-talks-backup-${date}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                showDataManagementMessage('Talks data exported successfully!', 'success');
+            })
+            .catch(error => {
+                console.error('Error exporting talks:', error);
+                showDataManagementMessage('Failed to export talks data.', 'error');
+            });
     }
 
     function importTalksData(event) {
@@ -221,30 +269,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Validate each talk has required fields
                 const validTalks = importedTalks.filter(talk => {
-                    return talk.id && talk.presenter && talk.date && talk.title && talk.description;
+                    return talk.presenter && talk.date && talk.title && talk.description;
                 });
 
                 if (validTalks.length === 0) {
                     throw new Error('No valid talks found in the file');
                 }
 
-                // Merge with existing talks (avoid duplicates)
-                const existingTalks = getTalksFromStorage();
-                const existingIds = new Set(existingTalks.map(talk => talk.id));
-                
-                const newTalks = validTalks.filter(talk => !existingIds.has(talk.id));
-                const mergedTalks = [...existingTalks, ...newTalks];
-                
-                // Sort by date (newest first)
-                mergedTalks.sort((a, b) => new Date(b.date) - new Date(a.date));
-                
-                localStorage.setItem('cryptoTalks', JSON.stringify(mergedTalks));
-                loadTalks();
-                
-                const message = newTalks.length > 0 
-                    ? `Successfully imported ${newTalks.length} new talks!`
-                    : 'All talks already exist in the system.';
-                showDataManagementMessage(message, 'success');
+                // Add talks one by one via API
+                Promise.all(validTalks.map(talk => {
+                    const talkData = {
+                        presenter: talk.presenter,
+                        date: talk.date,
+                        title: talk.title,
+                        description: talk.description,
+                        paper: talk.paper || '',
+                        authors: talk.authors || '',
+                        pdfLink: talk.pdfLink || '',
+                        slidesLink: talk.slidesLink || '',
+                        recordingLink: talk.recordingLink || '',
+                        additionalLinks: talk.additionalLinks || ''
+                    };
+                    return saveTalkToApi(talkData);
+                }))
+                .then(() => {
+                    loadTalks();
+                    showDataManagementMessage(`Successfully imported ${validTalks.length} talks!`, 'success');
+                })
+                .catch(error => {
+                    console.error('Error importing talks:', error);
+                    showDataManagementMessage(`Error importing talks: ${error.message}`, 'error');
+                });
                 
             } catch (error) {
                 showDataManagementMessage(`Error importing talks: ${error.message}`, 'error');
@@ -255,9 +310,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function clearAllTalks() {
         if (confirm('Are you sure you want to delete all talks? This action cannot be undone.')) {
-            localStorage.removeItem('cryptoTalks');
-            loadTalks();
-            showDataManagementMessage('All talks cleared successfully.', 'success');
+            fetch(`${API_BASE}/talks`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(() => {
+                loadTalks();
+                showDataManagementMessage('All talks cleared successfully.', 'success');
+            })
+            .catch(error => {
+                console.error('Error clearing talks:', error);
+                // Fallback to localStorage clear if API fails
+                localStorage.removeItem('cryptoTalks');
+                loadTalks();
+                showDataManagementMessage('All talks cleared from local storage.', 'warning');
+            });
         }
     }
 
