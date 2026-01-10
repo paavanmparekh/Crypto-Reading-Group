@@ -1,5 +1,18 @@
 [
   {
+    "id": 1768004479504,
+    "presenter": "Test User",
+    "date": "2024-01-20",
+    "title": "Test Talk for Cross-Browser Sync",
+    "description": "This is a test talk to verify cross-browser synchronization is working properly.",
+    "paper": "",
+    "authors": "",
+    "pdfLink": "",
+    "slidesLink": "",
+    "recordingLink": "",
+    "additionalLinks": ""
+  },
+  {
     "id": 1704864000000,
     "presenter": "Sarah Johnson",
     "date": "2024-01-10",
