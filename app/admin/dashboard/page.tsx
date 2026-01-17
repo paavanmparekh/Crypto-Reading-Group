@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/db';
 import Link from 'next/link';
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 export default async function DashboardPage() {
     let talksCount = 0;
     let membersCount = 0;

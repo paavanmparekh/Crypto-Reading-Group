@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/db';
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 interface Talk {
     id: string;
     title: string;
