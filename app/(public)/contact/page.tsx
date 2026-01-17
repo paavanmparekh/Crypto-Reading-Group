@@ -225,7 +225,7 @@ export default function ContactPage() {
                                 </div>
                                 <h3 className="font-semibold text-gray-900 mb-2">When</h3>
                                 <p className="text-gray-700">Weekly Meetings</p>
-                                <p className="text-gray-600 text-sm">Schedule TBA</p>
+                                <p className="text-gray-600 text-sm">Every Friday at 9:00 PM</p>
                             </div>
                             <div className="text-center">
                                 <div className="bg-primary-100 text-primary-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">

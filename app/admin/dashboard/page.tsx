@@ -10,14 +10,13 @@ export default async function DashboardPage() {
     let upcomingTalks: any[] = [];
 
     try {
-        [talksCount, membersCount, subscribersCount] = await Promise.all([
+        [talksCount, membersCount] = await Promise.all([
             prisma.talk.count(),
             prisma.member.count(),
-            prisma.subscriber.count(),
         ]);
 
         upcomingTalks = await prisma.talk.findMany({
-            where: { isUpcoming: true },
+            where: { date: { gte: new Date() } }, // Filter by date instead of isUpcoming flag
             orderBy: { date: 'asc' },
             take: 3,
         });
@@ -30,7 +29,7 @@ export default async function DashboardPage() {
             <h1 className="text-3xl font-bold text-gray-900 mb-8">Dashboard Overview</h1>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                 <div className="card border-l-4 border-primary-500">
                     <div className="flex justify-between items-start">
                         <div>
@@ -48,16 +47,6 @@ export default async function DashboardPage() {
                             <h3 className="text-3xl font-bold text-gray-900">{membersCount}</h3>
                         </div>
                         <span className="text-2xl">👥</span>
-                    </div>
-                </div>
-
-                <div className="card border-l-4 border-green-500">
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <p className="text-sm font-medium text-gray-600 mb-1">Subscribers</p>
-                            <h3 className="text-3xl font-bold text-gray-900">{subscribersCount}</h3>
-                        </div>
-                        <span className="text-2xl">📧</span>
                     </div>
                 </div>
             </div>

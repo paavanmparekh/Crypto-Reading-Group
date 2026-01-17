@@ -76,9 +76,9 @@ export default async function TalksPage() {
                                 {talk.abstract}
                             </p>
 
-                            <div className="flex flex-wrap gap-4 pt-4 border-t border-gray-100">
+                            <div className="flex flex-wrap gap-4 pt-4 border-t border-gray-100 relative z-10">
                                 {talk.slidesUrl ? (
-                                    <a href={talk.slidesUrl} target="_blank" className="flex items-center gap-2 text-primary-700 hover:text-primary-900 font-medium">
+                                    <a href={talk.slidesUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary-700 hover:text-primary-900 font-medium">
                                         📄 View Slides
                                     </a>
                                 ) : (
@@ -88,7 +88,7 @@ export default async function TalksPage() {
                                 )}
 
                                 {talk.paperLink ? (
-                                    <a href={talk.paperLink} target="_blank" className="flex items-center gap-2 text-primary-700 hover:text-primary-900 font-medium">
+                                    <a href={talk.paperLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary-700 hover:text-primary-900 font-medium">
                                         📝 {talk.paperTitle ? `Paper: ${talk.paperTitle}` : 'Read Paper'}
                                     </a>
                                 ) : (
@@ -98,7 +98,7 @@ export default async function TalksPage() {
                                 )}
 
                                 {talk.videoUrl ? (
-                                    <a href={talk.videoUrl} target="_blank" className="flex items-center gap-2 text-primary-700 hover:text-primary-900 font-medium">
+                                    <a href={talk.videoUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary-700 hover:text-primary-900 font-medium">
                                         🎥 Watch Recording
                                     </a>
                                 ) : (

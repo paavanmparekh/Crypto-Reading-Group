@@ -30,7 +30,7 @@ export default function PeoplePage() {
         },
         {
             name: 'Paavan Parekh',
-            role: 'organizer',
+            role: 'member',
             year: 'PhD Student',
             researchInterests: ['Secure Computation', 'Privacy-Preserving Systems', 'Applied Cryptography'],
             bio: 'Paavan is a PhD student and organizer of the reading group, working on secure computation and privacy-preserving systems.',
@@ -66,7 +66,7 @@ export default function PeoplePage() {
                     <div className="card-glass">
                         <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
                             <div className="w-32 h-32 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center text-white text-4xl font-bold flex-shrink-0">
-                                {advisor.name.split(' ').map(n => n[0]).join('')}
+                                OP
                             </div>
                             <div className="flex-grow text-center md:text-left">
                                 <h3 className="text-2xl font-bold text-gray-900 mb-1">

@@ -2,13 +2,20 @@ import Link from 'next/link';
 import { prisma } from '@/lib/db';
 
 export default async function HomePage() {
-  const nextTalk = await prisma.talk.findFirst({
+  let nextTalk = await prisma.talk.findFirst({
     where: {
       date: { gte: new Date() },
-      isUpcoming: true
     },
     orderBy: { date: 'asc' },
   });
+
+  // If no upcoming talk, show the most recent past talk
+  if (!nextTalk) {
+    nextTalk = await prisma.talk.findFirst({
+      where: { date: { lt: new Date() } },
+      orderBy: { date: 'desc' },
+    });
+  }
 
   return (
     <div className="animate-fade-in">
