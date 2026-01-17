@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/db';
 
+export const revalidate = 0;
+
+
 export default async function HomePage() {
   let nextTalk = await prisma.talk.findFirst({
     where: {

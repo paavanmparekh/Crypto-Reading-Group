@@ -1,3 +1,4 @@
+export const revalidate = 0; // Revalidate immediately
 export default function PeoplePage() {
     const members = [
         {

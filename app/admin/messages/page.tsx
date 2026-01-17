@@ -52,7 +52,7 @@ export default async function MessagesPage() {
 
                             <div className="flex justify-end gap-3 pt-2 border-t border-gray-100">
                                 <a
-                                    href={`mailto:${msg.email}?subject=Re: Inquiry via Contact Form&body=\n\nOn ${new Date(msg.createdAt).toLocaleDateString()}, ${msg.name} wrote:\n> ${msg.message.replace(/\n/g, '\n> ')}`}
+                                    href={`mailto:${msg.email}?subject=${encodeURIComponent('Re: Inquiry via Contact Form')}&body=${encodeURIComponent(`\n\nOn ${new Date(msg.createdAt).toLocaleDateString()}, ${msg.name} wrote:\n> ${msg.message.replace(/\n/g, '\n> ')}`)}`}
                                     className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
