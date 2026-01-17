@@ -1,0 +1,96 @@
+// This is your Prisma schema file
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+}
+
+model Talk {
+  id                  String   @id @default(cuid())
+  title               String
+  abstract            String   @db.Text
+  speaker             String
+  speakerAffiliation  String?
+  date                DateTime
+  time                String
+  location            String
+  zoomLink            String?
+  paperTitle          String?
+  paperLink           String?  // DOI or arXiv
+  slidesUrl           String?  // Vercel Blob URL
+  videoUrl            String?
+  tags                String[] // Array of topics
+  semester            String   // e.g., "Fall 2024"
+  isUpcoming          Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([date])
+  @@index([semester])
+  @@index([isUpcoming])
+}
+
+model Member {
+  id                String   @id @default(cuid())
+  name              String
+  email             String   @unique
+  photoUrl          String?
+  role              String   // "organizer", "member", "advisor", "alumni"
+  year              String?  // PhD year
+  researchInterests String[]
+  websiteUrl        String?
+  githubUrl         String?
+  bio               String?  @db.Text
+  talksGiven        Int      @default(0)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([role])
+  @@index([isActive])
+}
+
+model Subscriber {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  subscribedAt DateTime @default(now())
+  isActive     Boolean  @default(true)
+
+  @@index([isActive])
+}
+
+model Resource {
+  id          String   @id @default(cuid())
+  title       String
+  type        String   // "paper", "book", "survey", "link"
+  url         String
+  category    String   // Topic category
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+
+  @@index([category])
+  @@index([type])
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // Hashed with bcrypt
+  name      String
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+  read      Boolean  @default(false)
+}

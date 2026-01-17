@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+@theme {
+  /* Formal Academic Palette - Navy Blue & Slate */
+  --color-primary-50: #f0f4f8;
+  --color-primary-100: #d9e2ec;
+  --color-primary-200: #bcccdc;
+  --color-primary-300: #9fb3c8;
+  --color-primary-400: #829ab1;
+  --color-primary-500: #627d98;
+  --color-primary-600: #486581;
+  --color-primary-700: #334e68;
+  --color-primary-800: #243b53;
+  --color-primary-900: #102a43;
+
+  /* Accent - Subtle Gold/Bronze for formal highlights */
+  --color-accent-500: #f0b429;
+  --color-accent-600: #d69e2e;
+  --color-accent-700: #b7791f;
+
+  /* Formal Fonts - Merriweather (headers) & Open Sans (body) */
+  --font-serif: 'Merriweather', serif;
+  --font-sans: 'Open Sans', system-ui, sans-serif;
+}
+
+/* Custom Utilities layer */
+@layer utilities {
+  .text-gradient {
+    /* Removed flashy gradient, replaced with solid primary color */
+    @apply text-primary-900;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+}
+
+/* Base layer overrides */
+@layer base {
+  * {
+    @apply border-gray-200;
+  }
+
+  body {
+    @apply bg-white text-gray-900 font-sans antialiased;
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold text-primary-900;
+    font-family: var(--font-serif);
+  }
+}
+
+/* Components layer */
+@layer components {
+  .btn-primary {
+    @apply bg-primary-900 hover:bg-primary-800 text-white font-medium px-6 py-3 rounded-md transition-all duration-200 shadow-sm hover:shadow-md;
+  }
+
+  .btn-secondary {
+    @apply bg-white hover:bg-gray-50 text-primary-900 font-medium px-6 py-3 rounded-md border border-primary-900 transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 p-6;
+  }
+
+  .card-glass {
+    /* Simplified for formal look - just a clean white card */
+    @apply bg-white rounded-lg shadow-md border border-gray-200 p-6;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-900 focus:border-primary-900 transition-all duration-200 outline-none;
+  }
+
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16;
+  }
+
+  .gradient-bg {
+    /* Replaced gradient with solid formal color */
+    @apply bg-primary-900;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--color-gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary-600);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-primary-800);
+}
