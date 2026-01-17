@@ -1,54 +1,29 @@
-export const revalidate = 0; // Revalidate immediately
-export default function PeoplePage() {
-    const members = [
-        {
-            name: 'Christopher Smith',
-            role: 'member',
-            year: 'PhD Student',
-            researchInterests: ['Zero-Knowledge Proofs', 'Secure Multi-Party Computation', 'Cryptographic Protocols'],
-            bio: 'Christopher is a PhD student focusing on zero-knowledge proof systems and their applications in privacy-preserving protocols.',
-        },
-        {
-            name: 'Yuhao Tang',
-            role: 'member',
-            year: 'PhD Student',
-            researchInterests: ['Post-Quantum Cryptography', 'Lattice-Based Cryptography', 'Code-Based Cryptography'],
-            bio: 'Yuhao researches post-quantum cryptographic schemes with a focus on lattice-based and code-based constructions.',
-        },
-        {
-            name: 'Raja Rakshit Varanasi',
-            role: 'member',
-            year: 'PhD Student',
-            researchInterests: ['Functional Encryption', 'Attribute-Based Encryption', 'Foundations of Cryptography'],
-            bio: 'Raja studies advanced encryption schemes including functional and attribute-based encryption systems.',
-        },
-        {
-            name: 'Vir Pathak',
-            role: 'member',
-            year: 'PhD Student',
-            researchInterests: ['Blockchain Security', 'Consensus Protocols', 'Cryptographic Primitives'],
-            bio: 'Vir explores the intersection of cryptography and distributed systems, with emphasis on blockchain technologies.',
-        },
-        {
-            name: 'Paavan Parekh',
-            role: 'member',
-            year: 'PhD Student',
-            researchInterests: ['Secure Computation', 'Privacy-Preserving Systems', 'Applied Cryptography'],
-            bio: 'Paavan is a PhD student and organizer of the reading group, working on secure computation and privacy-preserving systems.',
-        },
-    ];
+import { prisma } from '@/lib/db';
 
-    const advisor = {
-        name: 'Prof. Omkant Pandey',
+export const revalidate = 0; // Revalidate immediately
+export default async function PeoplePage() {
+    //     const members = [
+    // ... (Removing hardcoded data)
+    //     ];
+
+    const allMembers = await prisma.member.findMany({
+        where: { isActive: true },
+        orderBy: { name: 'asc' }
+    });
+
+    const advisor = allMembers.find(m => m.role === 'Faculty Advisor') || {
+        name: 'Prof. Omkant Pandey', // Fallback
         role: 'Faculty Advisor',
-        researchInterests: ['Foundations of Cryptography', 'Zero-Knowledge', 'Secure Computation'],
-        bio: 'Professor Pandey is a leading researcher in theoretical cryptography with expertise in zero-knowledge proofs and secure multi-party computation.',
-        website: 'https://www3.cs.stonybrook.edu/~omkant/',
+        bio: 'Professor Pandey is a leading researcher...',
+        researchInterests: ['Foundations of Cryptography', 'Zero-Knowledge'],
+        websiteUrl: 'https://www3.cs.stonybrook.edu/~omkant/',
     };
+
+    const members = allMembers.filter(m => m.role !== 'Faculty Advisor');
 
     return (
         <div className="min-h-screen bg-gray-50">
-            {/* Header */}
+            {/* ... Header ... */}
             <section className="bg-gradient-to-r from-primary-600 to-accent-600 text-white py-16">
                 <div className="section-container text-center">
                     <h1 className="text-5xl font-bold mb-4">Our Team</h1>
@@ -67,7 +42,7 @@ export default function PeoplePage() {
                     <div className="card-glass">
                         <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
                             <div className="w-32 h-32 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center text-white text-4xl font-bold flex-shrink-0">
-                                OP
+                                {advisor.name === 'Prof. Omkant Pandey' ? 'OP' : advisor.name.split(' ').map((n: string) => n[0]).join('')}
                             </div>
                             <div className="flex-grow text-center md:text-left">
                                 <h3 className="text-2xl font-bold text-gray-900 mb-1">
@@ -78,7 +53,7 @@ export default function PeoplePage() {
                                 <div className="mb-4">
                                     <h4 className="font-semibold text-gray-900 mb-2">Research Interests:</h4>
                                     <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                                        {advisor.researchInterests.map((interest) => (
+                                        {advisor.researchInterests.map((interest: string) => (
                                             <span
                                                 key={interest}
                                                 className="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm"
@@ -88,9 +63,9 @@ export default function PeoplePage() {
                                         ))}
                                     </div>
                                 </div>
-                                {advisor.website && (
+                                {advisor.websiteUrl && (
                                     <a
-                                        href={advisor.website}
+                                        href={advisor.websiteUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium"
@@ -114,10 +89,10 @@ export default function PeoplePage() {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {members.map((member) => (
-                        <div key={member.name} className="card hover:scale-105 transition-transform duration-300">
+                        <div key={member.id} className="card hover:scale-105 transition-transform duration-300">
                             <div className="flex flex-col items-center text-center">
                                 <div className="w-24 h-24 bg-gradient-to-br from-primary-400 to-accent-400 rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4">
-                                    {member.name.split(' ').map(n => n[0]).join('')}
+                                    {member.name.split(' ').map((n: string) => n[0]).join('')}
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-1">
                                     {member.name}
@@ -128,11 +103,11 @@ export default function PeoplePage() {
                                         Organizer
                                     </span>
                                 )}
-                                <p className="text-gray-600 text-sm mb-4">{member.bio}</p>
+                                <p className="text-gray-600 text-sm mb-4 line-clamp-3">{member.bio}</p>
                                 <div className="mt-auto w-full">
                                     <h4 className="font-semibold text-gray-900 text-sm mb-2">Research Interests:</h4>
                                     <div className="flex flex-wrap gap-2 justify-center">
-                                        {member.researchInterests.map((interest) => (
+                                        {member.researchInterests.map((interest: string) => (
                                             <span
                                                 key={interest}
                                                 className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs"
