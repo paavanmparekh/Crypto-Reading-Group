@@ -28,7 +28,7 @@ export async function POST(req: Request) {
                 abstract: body.abstract,
                 speaker: body.speaker,
                 speakerAffiliation: body.speakerAffiliation,
-                date: (new Date(body.date).toString() !== 'Invalid Date') ? new Date(body.date) : (() => { throw new Error('Invalid date provided'); })(),
+                date: (new Date(body.date).toString() !== 'Invalid Date') ? new Date(body.date + 'T12:00:00Z') : (() => { throw new Error('Invalid date provided'); })(),
                 time: body.time,
                 location: body.location,
                 zoomLink: body.zoomLink,

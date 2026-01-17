@@ -9,6 +9,7 @@ interface Talk {
     title: string;
     speaker: string;
     date: Date;
+    time: string;
     isUpcoming: boolean;
 }
 
@@ -109,15 +110,52 @@ export default function TalksManagementPage() {
                                     {talk.speaker}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                    {new Date(talk.date) > new Date() ? (
-                                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            Upcoming
-                                        </span>
-                                    ) : (
-                                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                            Past
-                                        </span>
-                                    )}
+                                    {(() => {
+                                        const talkDate = new Date(talk.date);
+                                        const now = new Date();
+                                        talkDate.setHours(0, 0, 0, 0);
+                                        const today = new Date();
+                                        today.setHours(0, 0, 0, 0);
+
+                                        let isPast = false;
+
+                                        if (talkDate < today) {
+                                            isPast = true;
+                                        } else if (talkDate.getTime() === today.getTime()) {
+                                            // Same day, check time
+                                            try {
+                                                const timeStr = talk.time.toLowerCase();
+                                                const match = timeStr.match(/(\d+):(\d+)\s*(am|pm)?/);
+                                                if (match) {
+                                                    let hours = parseInt(match[1]);
+                                                    const minutes = parseInt(match[2]);
+                                                    const period = match[3];
+
+                                                    if (period === 'pm' && hours < 12) hours += 12;
+                                                    if (period === 'am' && hours === 12) hours = 0;
+
+                                                    const nowHours = now.getHours();
+                                                    const nowMinutes = now.getMinutes();
+
+                                                    if (nowHours > hours || (nowHours === hours && nowMinutes >= minutes)) {
+                                                        isPast = true;
+                                                    }
+                                                }
+                                            } catch (e) {
+                                                // If time parsing fails, assume upcoming
+                                            }
+                                        }
+
+                                        return isPast ? (
+                                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                                Past
+                                            </span>
+                                        ) : (
+                                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Upcoming
+                                            </span>
+                                        );
+                                    })()}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <button

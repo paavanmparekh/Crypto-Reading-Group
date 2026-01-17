@@ -64,7 +64,7 @@ export async function PATCH(
                 abstract: body.abstract,
                 speaker: body.speaker,
                 speakerAffiliation: body.speakerAffiliation,
-                date: body.date ? ((new Date(body.date).toString() !== 'Invalid Date') ? new Date(body.date) : undefined) : undefined,
+                date: body.date ? ((new Date(body.date).toString() !== 'Invalid Date') ? new Date(body.date + 'T12:00:00Z') : undefined) : undefined,
                 time: body.time,
                 location: body.location,
                 zoomLink: body.zoomLink,
