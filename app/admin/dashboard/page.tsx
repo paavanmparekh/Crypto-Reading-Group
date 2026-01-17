@@ -5,7 +5,7 @@ export default async function DashboardPage() {
     let talksCount = 0;
     let membersCount = 0;
     let subscribersCount = 0;
-    let upcomingTalks = [];
+    let upcomingTalks: any[] = [];
 
     try {
         [talksCount, membersCount, subscribersCount] = await Promise.all([
