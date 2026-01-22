@@ -14,8 +14,8 @@ export default async function PeoplePage() {
     const advisor = allMembers.find(m => m.role === 'Faculty Advisor') || {
         name: 'Prof. Omkant Pandey', // Fallback
         role: 'Faculty Advisor',
-        bio: 'Professor Pandey is a leading researcher...',
-        researchInterests: ['Foundations of Cryptography', 'Zero-Knowledge'],
+        bio: 'Faculty member in the computer science department at Stony Brook University. I am interested in cryptography and its interplay with other areas.',
+        researchInterests: ['Cryptography', 'Complexity Theory', 'Zero Knowledge Proof', 'Multi-Party Computation'],
         websiteUrl: 'https://www3.cs.stonybrook.edu/~omkant/',
     };
 
@@ -118,6 +118,21 @@ export default async function PeoplePage() {
                                     </div>
                                 </div>
                             </div>
+                            {member.websiteUrl && (
+                                <div className="mt-4 pt-4 border-t border-gray-100 w-full">
+                                    <a
+                                        href={member.websiteUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium text-sm"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                        Portfolio / Website
+                                    </a>
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>

@@ -23,7 +23,7 @@ export default async function HomePage() {
   return (
     <div className="animate-fade-in">
       {/* Hero Section */}
-      <section className="gradient-bg text-white py-20">
+      <section className="bg-crypto-theme text-white py-20">
         <div className="section-container text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-slide-up">
             Cryptography Reading Group
@@ -96,7 +96,7 @@ export default async function HomePage() {
       </section>
 
       {/* About Section */}
-      <section className="bg-white py-16">
+      <section className="bg-white pt-8 pb-16">
         <div className="section-container">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">
@@ -126,7 +126,7 @@ export default async function HomePage() {
               </div>
               <div className="card">
                 <div className="text-4xl mb-4">🎓</div>
-                <h3 className="text-xl font-semibold mb-2">Advanced Security</h3>
+                <h3 className="text-xl font-semibold mb-2">Advanced Cryptography</h3>
                 <p className="text-gray-600">
                   Advanced topics for graduate students and researchers
                 </p>

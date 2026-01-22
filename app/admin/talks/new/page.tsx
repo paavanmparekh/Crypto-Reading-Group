@@ -15,12 +15,10 @@ export default function NewTalkPage() {
         location: '',
         abstract: '',
         zoomLink: '',
-        semester: 'Spring 2026',
         paperTitle: '',
         paperLink: '',
         slidesUrl: '',
         videoUrl: '',
-        notifySubscribers: false,
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -121,18 +119,7 @@ export default function NewTalkPage() {
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Semester</label>
-                        <select
-                            className="input-field"
-                            value={formData.semester}
-                            onChange={(e) => setFormData({ ...formData, semester: e.target.value })}
-                        >
-                            <option>Spring 2026</option>
-                            <option>Fall 2025</option>
-                            <option>Spring 2025</option>
-                        </select>
-                    </div>
+
 
                     <div className="col-span-2">
                         <label className="block text-sm font-medium text-gray-700 mb-2">Abstract</label>
@@ -203,17 +190,7 @@ export default function NewTalkPage() {
                         />
                     </div>
 
-                    <div className="col-span-2">
-                        <label className="flex items-center gap-2 text-sm text-gray-700">
-                            <input
-                                type="checkbox"
-                                className="w-4 h-4 text-primary-600 rounded"
-                                checked={formData.notifySubscribers}
-                                onChange={(e) => setFormData({ ...formData, notifySubscribers: e.target.checked })}
-                            />
-                            Notify mailing list subscribers about this talk
-                        </label>
-                    </div>
+
                 </div>
 
                 <div className="flex justify-end pt-4">

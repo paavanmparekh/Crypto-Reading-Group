@@ -92,6 +92,13 @@
     /* Replaced gradient with solid formal color */
     @apply bg-primary-900;
   }
+
+  .bg-crypto-theme {
+    background-image: linear-gradient(rgba(16, 42, 67, 0.85), rgba(16, 42, 67, 0.9)), url('/images/crypto-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 }
 
 @keyframes fadeIn {
