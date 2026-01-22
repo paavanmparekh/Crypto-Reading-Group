@@ -14,7 +14,7 @@ export default async function PeoplePage() {
     const advisor = allMembers.find(m => m.role === 'Faculty Advisor') || {
         name: 'Prof. Omkant Pandey', // Fallback
         role: 'Faculty Advisor',
-        bio: 'Faculty member in the computer science department at Stony Brook University. I am interested in cryptography and its interplay with other areas.',
+        bio: '',
         researchInterests: ['Cryptography', 'Complexity Theory', 'Zero Knowledge Proof', 'Multi-Party Computation'],
         websiteUrl: 'https://www3.cs.stonybrook.edu/~omkant/',
     };
@@ -24,7 +24,7 @@ export default async function PeoplePage() {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* ... Header ... */}
-            <section className="bg-gradient-to-r from-primary-600 to-accent-600 text-white py-16">
+            <section className="bg-crypto-theme text-white py-16">
                 <div className="section-container text-center">
                     <h1 className="text-5xl font-bold mb-4">Our Team</h1>
                     <p className="text-xl text-blue-100 max-w-2xl mx-auto">
@@ -49,7 +49,7 @@ export default async function PeoplePage() {
                                     {advisor.name}
                                 </h3>
                                 <p className="text-primary-600 font-medium mb-3">{advisor.role}</p>
-                                <p className="text-gray-700 mb-4">{advisor.bio}</p>
+                                {advisor.bio && <p className="text-gray-700 mb-4">{advisor.bio}</p>}
                                 <div className="mb-4">
                                     <h4 className="font-semibold text-gray-900 mb-2">Research Interests:</h4>
                                     <div className="flex flex-wrap gap-2 justify-center md:justify-start">
