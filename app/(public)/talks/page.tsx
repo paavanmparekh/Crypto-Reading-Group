@@ -52,7 +52,7 @@ export default async function TalksPage() {
                                         <span className="text-sm font-semibold text-primary-600 bg-primary-50 px-3 py-1 rounded-full">
                                             {new Date(talk.date).toLocaleDateString()}
                                         </span>
-                                        {talk.isUpcoming && (
+                                        {new Date(talk.date) >= new Date(new Date().setHours(0, 0, 0, 0)) && (
                                             <span className="text-sm font-semibold text-green-700 bg-green-50 px-3 py-1 rounded-full">
                                                 Upcoming
                                             </span>

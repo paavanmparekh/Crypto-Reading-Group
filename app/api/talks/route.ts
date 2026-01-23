@@ -22,13 +22,28 @@ export async function POST(req: Request) {
 
     try {
         const body = await req.json();
+        const talkDate = (new Date(body.date).toString() !== 'Invalid Date') ? new Date(body.date + 'T12:00:00Z') : (() => { throw new Error('Invalid date provided'); })();
+
+        // Calculate semester
+        const month = talkDate.getMonth(); // 0-11
+        const year = talkDate.getFullYear();
+        let semester = '';
+
+        if (month >= 0 && month <= 4) { // Jan - May
+            semester = `Spring ${year}`;
+        } else if (month >= 5 && month <= 7) { // Jun - Aug
+            semester = `Summer ${year}`;
+        } else { // Sep - Dec
+            semester = `Fall ${year}`;
+        }
+
         const talk = await prisma.talk.create({
             data: {
                 title: body.title,
                 abstract: body.abstract,
                 speaker: body.speaker,
                 speakerAffiliation: body.speakerAffiliation,
-                date: (new Date(body.date).toString() !== 'Invalid Date') ? new Date(body.date + 'T12:00:00Z') : (() => { throw new Error('Invalid date provided'); })(),
+                date: talkDate,
                 time: body.time,
                 location: body.location,
                 zoomLink: body.zoomLink,
@@ -37,7 +52,7 @@ export async function POST(req: Request) {
                 slidesUrl: body.slidesUrl,
                 videoUrl: body.videoUrl,
                 tags: body.tags || [],
-                semester: body.semester,
+                semester: semester,
                 isUpcoming: true,
             },
         });
