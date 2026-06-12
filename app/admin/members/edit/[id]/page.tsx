@@ -124,7 +124,7 @@ export default function EditMemberPage({ params }: EditMemberPageProps) {
                         className="block w-full text-sm text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-primary-50 file:px-4 file:py-2 file:font-medium file:text-primary-700 hover:file:bg-primary-100"
                         onChange={(e) => setPhotoFile(e.target.files?.[0] || null)}
                     />
-                    <p className="mt-2 text-sm text-gray-500">Optional. Choose a new image only if you want to replace the current one.</p>
+                    <p className="mt-2 text-sm text-gray-500">Optional. Choose a new image under 1 MB only if you want to replace the current one.</p>
                 </div>
 
                 <div>

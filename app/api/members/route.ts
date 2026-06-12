@@ -12,6 +12,15 @@ async function uploadMemberPhoto(photo: FormDataEntryValue | null) {
         throw new Error('Profile image must be an image file');
     }
 
+    if (photo.size > 1024 * 1024) {
+        throw new Error('Profile image must be smaller than 1 MB');
+    }
+
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+        const buffer = Buffer.from(await photo.arrayBuffer());
+        return `data:${photo.type};base64,${buffer.toString('base64')}`;
+    }
+
     const extension = photo.name.split('.').pop() || 'jpg';
     const blob = await put(`members/${crypto.randomUUID()}.${extension}`, photo, {
         access: 'public',
