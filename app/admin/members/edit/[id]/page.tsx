@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -13,18 +14,12 @@ export default function EditMemberPage({ params }: EditMemberPageProps) {
     const { id } = resolvedParams;
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
-
-    // Initial state
     const [formData, setFormData] = useState({
         name: '',
-        email: '',
-        role: 'member',
-        year: '',
-        bio: '',
         websiteUrl: '',
-        githubUrl: '',
-        researchInterests: '',
+        photoUrl: '',
     });
+    const [photoFile, setPhotoFile] = useState<File | null>(null);
 
     useEffect(() => {
         const fetchMember = async () => {
@@ -34,15 +29,8 @@ export default function EditMemberPage({ params }: EditMemberPageProps) {
                     const data = await res.json();
                     setFormData({
                         name: data.name || '',
-                        email: data.email || '',
-                        role: data.role || 'member',
-                        year: data.year || '',
-                        bio: data.bio || '',
                         websiteUrl: data.websiteUrl || '',
-                        githubUrl: data.githubUrl || '',
-                        researchInterests: Array.isArray(data.researchInterests)
-                            ? data.researchInterests.join(', ')
-                            : '',
+                        photoUrl: data.photoUrl || '',
                     });
                 } else {
                     alert('Failed to fetch member details');
@@ -63,21 +51,26 @@ export default function EditMemberPage({ params }: EditMemberPageProps) {
         e.preventDefault();
         setSaving(true);
 
+        const body = new FormData();
+        body.append('name', formData.name);
+        body.append('websiteUrl', formData.websiteUrl);
+
+        if (photoFile) {
+            body.append('photo', photoFile);
+        }
+
         try {
             const res = await fetch(`/api/members/${id}`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...formData,
-                    researchInterests: formData.researchInterests.split(',').map(i => i.trim()).filter(Boolean),
-                }),
+                body,
             });
 
             if (res.ok) {
                 router.push('/admin/members');
                 router.refresh();
             } else {
-                alert('Failed to update member');
+                const data = await res.json();
+                alert(data.error || 'Failed to update member');
             }
         } catch (error) {
             console.error(error);
@@ -96,100 +89,54 @@ export default function EditMemberPage({ params }: EditMemberPageProps) {
     }
 
     return (
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-2xl mx-auto">
             <h1 className="text-3xl font-bold text-gray-900 mb-8">Edit Member</h1>
 
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-xl p-8 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                        <input
-                            type="text"
-                            required
-                            className="input-field"
-                            value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        />
-                    </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                    <input
+                        type="text"
+                        required
+                        className="input-field"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    />
+                </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                        <input
-                            type="email"
-                            required
-                            className="input-field"
-                            value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        />
-                    </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Profile Image</label>
+                    {formData.photoUrl && (
+                        <div className="relative mb-4 h-40 w-40 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+                            <Image
+                                src={formData.photoUrl}
+                                alt={`${formData.name} profile photo`}
+                                fill
+                                sizes="160px"
+                                unoptimized
+                                className="object-cover"
+                            />
+                        </div>
+                    )}
+                    <input
+                        type="file"
+                        accept="image/*"
+                        className="block w-full text-sm text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-primary-50 file:px-4 file:py-2 file:font-medium file:text-primary-700 hover:file:bg-primary-100"
+                        onChange={(e) => setPhotoFile(e.target.files?.[0] || null)}
+                    />
+                    <p className="mt-2 text-sm text-gray-500">Optional. Choose a new image only if you want to replace the current one.</p>
+                </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
-                        <select
-                            className="input-field"
-                            value={formData.role}
-                            onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                        >
-                            <option value="member">Member</option>
-                            <option value="organizer">Organizer</option>
-                            <option value="advisor">Faculty Advisor</option>
-                            <option value="alumni">Alumni</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Title/Year</label>
-                        <input
-                            type="text"
-                            className="input-field"
-                            placeholder="e.g., PhD Student"
-                            value={formData.year}
-                            onChange={(e) => setFormData({ ...formData, year: e.target.value })}
-                        />
-                    </div>
-
-                    <div className="col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Research Interests</label>
-                        <input
-                            type="text"
-                            className="input-field"
-                            placeholder="Separate with commas (e.g., ZK Proofs, MPC, Lattices)"
-                            value={formData.researchInterests}
-                            onChange={(e) => setFormData({ ...formData, researchInterests: e.target.value })}
-                        />
-                    </div>
-
-                    <div className="col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
-                        <textarea
-                            className="input-field"
-                            rows={3}
-                            value={formData.bio}
-                            onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Website URL</label>
-                        <input
-                            type="url"
-                            className="input-field"
-                            placeholder="https://..."
-                            value={formData.websiteUrl}
-                            onChange={(e) => setFormData({ ...formData, websiteUrl: e.target.value })}
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">GitHub URL</label>
-                        <input
-                            type="url"
-                            className="input-field"
-                            placeholder="https://github.com/..."
-                            value={formData.githubUrl}
-                            onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
-                        />
-                    </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Homepage Link</label>
+                    <input
+                        type="url"
+                        className="input-field"
+                        placeholder="https://..."
+                        value={formData.websiteUrl}
+                        onChange={(e) => setFormData({ ...formData, websiteUrl: e.target.value })}
+                    />
+                    <p className="mt-2 text-sm text-gray-500">Optional. The member name will link here on the Members page.</p>
                 </div>
 
                 <div className="flex justify-end pt-4">

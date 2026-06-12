@@ -1,6 +1,24 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getServerSession } from 'next-auth';
+import { put } from '@vercel/blob';
+
+async function uploadMemberPhoto(photo: FormDataEntryValue | null) {
+    if (!(photo instanceof File) || photo.size === 0) {
+        return null;
+    }
+
+    if (!photo.type.startsWith('image/')) {
+        throw new Error('Profile image must be an image file');
+    }
+
+    const extension = photo.name.split('.').pop() || 'jpg';
+    const blob = await put(`members/${crypto.randomUUID()}.${extension}`, photo, {
+        access: 'public',
+    });
+
+    return blob.url;
+}
 
 export async function DELETE(
     req: Request,
@@ -35,24 +53,30 @@ export async function PATCH(
     }
 
     try {
-        const body = await req.json();
+        const body = await req.formData();
+        const name = body.get('name')?.toString().trim();
+
+        if (!name) {
+            return NextResponse.json({ error: 'Name is required' }, { status: 400 });
+        }
+
+        const photoUrl = await uploadMemberPhoto(body.get('photo'));
         const member = await prisma.member.update({
             where: { id: params.id },
             data: {
-                name: body.name,
-                email: body.email,
-                role: body.role,
-                year: body.year,
-                bio: body.bio,
-                websiteUrl: body.websiteUrl,
-                githubUrl: body.githubUrl,
-                researchInterests: body.researchInterests || [],
+                name,
+                ...(photoUrl ? { photoUrl } : {}),
+                websiteUrl: body.get('websiteUrl')?.toString().trim() || null,
             },
         });
 
         return NextResponse.json(member);
     } catch (error) {
         console.error('Error updating member:', error);
+        if (error instanceof Error && error.message.includes('Profile image')) {
+            return NextResponse.json({ error: error.message }, { status: 400 });
+        }
+
         return NextResponse.json({ error: 'Failed to update member' }, { status: 500 });
     }
 }

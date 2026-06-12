@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -7,8 +8,8 @@ import { useRouter } from 'next/navigation';
 interface Member {
     id: string;
     name: string;
-    role: string;
-    year?: string;
+    photoUrl?: string | null;
+    websiteUrl?: string | null;
 }
 
 export default function MembersManagementPage() {
@@ -77,12 +78,34 @@ export default function MembersManagementPage() {
                 {members.map((member) => (
                     <div key={member.id} className="bg-white rounded-xl shadow p-6 flex flex-col">
                         <div className="flex items-center gap-4 mb-4">
-                            <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center font-bold text-gray-600">
-                                {member.name[0]}
+                            <div className="relative h-14 w-14 overflow-hidden rounded-lg bg-gray-200 flex-shrink-0">
+                                {member.photoUrl ? (
+                                    <Image
+                                        src={member.photoUrl}
+                                        alt={`${member.name} profile photo`}
+                                        fill
+                                        sizes="56px"
+                                        unoptimized
+                                        className="object-cover"
+                                    />
+                                ) : (
+                                    <div className="flex h-full w-full items-center justify-center font-bold text-gray-600">
+                                        {member.name[0]}
+                                    </div>
+                                )}
                             </div>
                             <div>
                                 <h3 className="font-bold text-gray-900">{member.name}</h3>
-                                <p className="text-sm text-gray-500">{member.role}</p>
+                                {member.websiteUrl && (
+                                    <a
+                                        href={member.websiteUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-sm text-primary-600 underline underline-offset-2 hover:text-primary-800"
+                                    >
+                                        Homepage
+                                    </a>
+                                )}
                             </div>
                         </div>
                         <div className="mt-auto pt-4 border-t border-gray-100 flex justify-end gap-3 text-sm font-medium">
