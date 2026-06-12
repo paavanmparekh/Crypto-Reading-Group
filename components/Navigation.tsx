@@ -11,7 +11,7 @@ export default function Navigation() {
     const navLinks = [
         { href: '/', label: 'Home' },
         { href: '/talks', label: 'Talks' },
-        { href: '/people', label: 'People' },
+        { href: '/members', label: 'Members' },
         { href: '/contact', label: 'Contact' },
     ];
 

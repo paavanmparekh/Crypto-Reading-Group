@@ -126,7 +126,7 @@ export default async function HomePage() {
               </div>
               <div className="card">
                 <div className="text-4xl mb-4">🎓</div>
-                <h3 className="text-xl font-semibold mb-2">Advanced Cryptography</h3>
+                <h3 className="text-xl font-semibold mb-2">Modern Cryptography</h3>
                 <p className="text-gray-600">
                   Advanced topics for graduate students and researchers
                 </p>

@@ -26,8 +26,8 @@ export default function Footer() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/people" className="hover:text-primary-400 transition-colors">
-                                    People
+                                <Link href="/members" className="hover:text-primary-400 transition-colors">
+                                    Members
                                 </Link>
                             </li>
                             <li>
